@@ -28,11 +28,11 @@ const UserSchema = new mongoose.Schema({
         default: ""
     },
     followers: {
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],// These fields are arrays that store references to other users in the database.
         default: []
     },
     following: {
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],// These fields are arrays that store references to other users in the database.
         default: []
     },
     isAdmin: {

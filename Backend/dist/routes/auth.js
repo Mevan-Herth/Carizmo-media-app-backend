@@ -31,7 +31,7 @@ router.post("/register", async (req, res) => {
         const newUser = new User({
             username,
             email,
-            password: hashedPassword
+            password:hashedPassword
         });
         //save user and respond
         const user = await newUser.save();
@@ -39,10 +39,30 @@ router.post("/register", async (req, res) => {
 
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Server register error" });
     }
 });
 
 //LOGIN
+router.post("/login", async(req,res)=>{
+    try{
+        //input login data
+        const { email, password } = req.body;
+
+        //finding user based on email or username
+        const user = await User.findOne({
+            $or: [{ email: email }, { username: email }]
+        });
+        if (!user) return res.status(404).json({ message: "User not found!" });
+
+        //password validation
+        const validatePassword = await bcrypt.compare(password, user.password)
+        if (!validatePassword) return res.status(401).json({message:"invalid pass word"});
+
+        res.status(200).json({ message: "Login successful!",user });
+    }catch(err){
+        res.status(500).json({ message: "Server login error" });
+    }
+});
 
 module.exports = router;
