@@ -38,6 +38,11 @@ const UserSchema = new mongoose.Schema({
     isAdmin: {
         type: Boolean,
         default: false
+    },
+    bio:{
+        type: String,
+        default:"",
+        max:69,
     }
 }, { timestamps: true } // Adds createdAt and updatedAt
 ); 
