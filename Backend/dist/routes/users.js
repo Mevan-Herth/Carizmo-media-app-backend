@@ -50,4 +50,25 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// DELETE USER
+router.delete("/:id", async (req, res) => {
+  try {
+    // Check if the user is authorized to Delete the account
+    if (req.body.userId === req.params.id || req.body.isAdmin) {
+      // Update user information
+      const deletedUser = await User.findByIdAndDelete(req.params.id);
+      if (!deletedUser) {
+        return res.status(404).json({ message: "User not found!" });
+      }
+      res.status(200).json({ message: "User deleteuser successfully", user: deletedUser });
+    } else {
+      res.status(403).json({ message: "You can only deleteuser your own account!" });
+    }
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server Delete-Users error" });
+  }
+});
+// FOLLOW A USER
 module.exports = router;
