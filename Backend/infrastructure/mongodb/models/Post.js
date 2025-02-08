@@ -10,6 +10,16 @@ const PostSchema = new mongoose.Schema({
     mainText:{
         type: String,
         required: true
+    },
+    images: {
+        type: Array,
+        default: []
+    },
+    userId:{
+        type:[{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+        required:true
     }
-})
-module.exports = mongoose.model('Post', PostSchema);
+},
+{ timestamps: true })
+
+export const Post = mongoose.model('Post', PostSchema);
