@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const userRoutes = require('./interfaces/routes/userRoutes');
 const { connectDB, env, serverConfig, logger } = require('./config');
-
+const {} = require('./application/userCases');
 
 dotenv.config();
 

@@ -1,4 +1,3 @@
-const User = require('../../domain/User');
 const UserModel = require('../../infrastructure/database/models/UserModel');
 
 class RegisterUser{
