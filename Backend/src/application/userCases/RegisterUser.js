@@ -9,16 +9,16 @@ class RegisterUser{
         }
 
         // check if user already exsits 
-        const exsitingUser = await UserModel.findOne({email});
-        if(exsitingUser){
+        const existingUser = await UserModel.findOne({email});
+        if(existingUser){
             throw new Error('User alreadt exsits!!!')
         } 
 
-        // create a new user entity 
-        const user = new User({username,email,password});
+        // // create a new user entity 
+        // const user = new User({username,email,password});
 
         // save the user to the database
-        const userModel = new UserModel(user);
+        const userModel = new UserModel({ username, email, password });
         await userModel.save();
 
         // return the user with out the password due to security resons i guess
