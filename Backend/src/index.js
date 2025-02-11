@@ -1,10 +1,10 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const userRoutes = require('./interfaces/routes/userRoutes');
+const userProfileRoutes = require('./interfaces/routes/userProfileRoutes');
 const { connectDB, env, serverConfig, logger } = require('./config');
 const {} = require('./application/userCases');
+const {authMiddleware} = require('../src/shared/middlewares/authMiddleware')
 
 dotenv.config();
 
@@ -17,6 +17,10 @@ connectDB();
 
 // use routes
 app.use('/api/users', userRoutes);
+
+//protected routes
+app.use(authMiddleware);
+app.use('/api/users', userProfileRoutes);
 
 // Start the server
 app.listen(serverConfig.port, () => {

@@ -1,4 +1,5 @@
 const UserModel = require('../../infrastructure/database/models/UserModel');
+const { generateToken } = require('../../infrastructure/services/authService')
 const bcrypt = require('bcrypt');
 
 class LoginUser {
@@ -16,6 +17,17 @@ class LoginUser {
         if (!validatePassword) {
             throw new Error('invalid password!!!!')
         }
+
+        //genrate token
+        const token = generateToken(user._id);
+        return {
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+            },
+            token,
+        };
     }
 }
 module.exports = LoginUser;
