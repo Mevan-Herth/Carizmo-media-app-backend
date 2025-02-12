@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema(
       followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
       following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
       isAdmin: { type: Boolean, default: false },
+      bio:{type:String, default:"",max:69},
     },
     { timestamps: true }
   );
