@@ -1,4 +1,5 @@
-const { LoginUser, RegisterUser, UpdateUser, DeleteUser } = require('../../application/userCases');
+const { token } = require('morgan');
+const { LoginUser, RegisterUser, UpdateUser, DeleteUser, LogoutUser } = require('../../application/userCases');
 
 class UserController {
     static async register(req, res) {
@@ -8,6 +9,13 @@ class UserController {
             // call the use case
             const registerUser = new RegisterUser();
             const { user, token } = await registerUser.execute({ username, email, password });
+            res.cookie('jwt', token, {
+                httpOnly: true,  // Makes it inaccessible to JavaScript (important for security)
+                signed: true,    // Signs the cookie to prevent tampering
+                sameSite: 'None', // Important for cross-site cookies (useful for different origins in development)
+                // secure: true,     // Use `true` for production (only over HTTPS)
+                maxAge: 7 * 24 * 60 * 60 * 1000,  // Set expiration time (7 days)
+            })
 
             res.status(200).json({ message: 'User register successfully', data: { user, token } });
         } catch (err) {
@@ -22,8 +30,30 @@ class UserController {
             // call the use case
             const loginUser = new LoginUser();
             const { user, token } = await loginUser.execute({ email, password });
+            res.cookie('jwt', token, {
+                httpOnly: true,  // Makes it inaccessible to JavaScript (important for security)
+                signed: true,    // Signs the cookie to prevent tampering
+                sameSite: 'None', // Important for cross-site cookies (useful for different origins in development)
+                // secure: true,     // Use `true` for production (only over HTTPS)
+                maxAge: 7 * 24 * 60 * 60 * 1000,  // Set expiration time (7 days)   
+            })
 
             res.status(200).json({ message: "Login successful!", data: { user, token } });
+        } catch (err) {
+            res.status(400).json({ message: err.message });
+        }
+    }
+    static async LogoutUser(req, res) {
+        try {
+            const logoutUser = new LogoutUser();
+            res.clearCookie('jwt', {
+                httpOnly: true,
+                signed: true,
+                sameSite: 'None',
+                // secure: true,
+            })
+            const result = logoutUser.execute();
+            res.status(200).json({ message: 'Logged out successfully' });
         } catch (err) {
             res.status(400).json({ message: err.message });
         }
@@ -48,7 +78,7 @@ class UserController {
             }
             // Call the use case to update the user
             const updateUser = new UpdateUser();
-            const updatedUser = await updateUser.execute({ userId: id, updateData:updateData });
+            const updatedUser = await updateUser.execute({ userId: id, updateData: updateData });
 
             res.status(200).json({ message: "User updated successfully!", data: updatedUser });
 
@@ -57,8 +87,8 @@ class UserController {
             res.status(400).json({ message: err.message });
         }
     }
-    static async deleteUser(req,res){
-        try{
+    static async deleteUser(req, res) {
+        try {
             const { id } = req.params;
 
             if (req.userId !== id && !req.body.isAdmin) {
@@ -66,11 +96,11 @@ class UserController {
             }
 
             const deleteUser = new DeleteUser();
-            const deletedUser = await deleteUser.execute({ userId: id,})
+            const deletedUser = await deleteUser.execute({ userId: id, })
 
             res.status(200).json({ message: "User deleted successfully!", deletedUser: deletedUser });
 
-        }catch(err){
+        } catch (err) {
             res.status(400).json({ message: err.message });
         }
     }
