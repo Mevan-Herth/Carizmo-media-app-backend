@@ -16,7 +16,6 @@ const addPost = async (postDb, post) => {
             _id:newId,
             ...post,
         })
-        console.log(newPost)
         await newPost.save()
 
         return newId
@@ -25,8 +24,19 @@ const addPost = async (postDb, post) => {
     }
 }
 
-const deletePost = async(postDb,id)=>{
-    try{await postDb.findByIdAndDelete(id)}
+const deletePost = async(postDb,id,userId)=>{
+    console.log(ObjectId(id))
+    try{
+        await postDb.findByOneAndDelete({title:"th"},
+    
+        (err, result) => {
+            if (err) {
+            console.log(err);
+            throw err
+            } else {
+            console.log('Successfully deleted:', result);
+            }
+      })}
 
     catch(err) {throw err}
 }

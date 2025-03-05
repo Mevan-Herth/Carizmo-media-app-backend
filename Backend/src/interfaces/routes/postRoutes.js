@@ -20,7 +20,9 @@ router.post("/add-post", async (req, res) => {
 
 router.delete("/delete-post/:id", async (req, res) => {
   try{
-    await Post.deletePost(req.params.id)
+    const{userId} = req.body
+
+    await Post.deletePost(req.params.id,userId)
     res.status(200).json({message:"Post successfully delete"})
   }
   catch(error){
@@ -29,6 +31,12 @@ router.delete("/delete-post/:id", async (req, res) => {
 
 });
 
+router.get("/post-detail/:id", async(req, res) => {
+  const post = await Post.getPostPage(req.params.id);
+  if (!post) return res.status(400).json({message:"Post not found"})
+
+  
+});
 // router.addComment("/add-comment/:postId",async(req,res)=>{
 
 // })

@@ -10,6 +10,7 @@ const addPost = async(title,content,userId)=>{
     const postObj = {
         "title":title,
         "mainText":content,
+        "userId":userId,
         "likes":0
     }
 
@@ -21,8 +22,8 @@ const addPost = async(title,content,userId)=>{
     }
 }
 
-const deletePost = async(postId)=>{
-    try{await postCase.deletePost(postClient.postModel,postId)}
+const deletePost = async(postId,userId)=>{
+    try{await postCase.deletePost(postClient.postModel,postId,userId)}
     catch(err){
         console.log(err["name"])
         if (err["name"] == "CastError") throw new Error("Post not found")
