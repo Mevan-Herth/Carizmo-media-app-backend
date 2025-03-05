@@ -1,8 +1,8 @@
 const { verifyToken } = require('../../infrastructure/services/authService');
 
 const authMiddleware = (req, res, next) => {
-  const token = req.header('Authorization');
-
+    const token = req.signedCookies['jwt'];
+    console.log('Token:', token);
   if (!token) {
     return res.status(401).json({
       success: false,
