@@ -34,8 +34,6 @@ router.delete("/delete-post/:id", async (req, res) => {
 router.get("/post-detail/:id", async(req, res) => {
   const post = await Post.getPostPage(req.params.id);
   if (!post) return res.status(400).json({message:"Post not found"})
-
-  
 });
 // router.addComment("/add-comment/:postId",async(req,res)=>{
 
