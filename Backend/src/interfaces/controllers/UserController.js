@@ -59,14 +59,29 @@ class UserController {
         }
     }
 
-
+    // Profile route - Returns user profile with picture and followers/following 
     static async profile(req, res) {
-        res.json({
-            success: true,
-            message: 'You have access to this protected route.',
-            userId: req.userId, // User ID from the token
-        });
+        try {
+            const user = await User.findById(req.userId); 
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            res.json({
+                success: true,
+                message: 'You have access to this protected route.',
+                userId: req.userId,
+                username: user.username,
+                profilePicture: user.profilePicture || '/images/Default-pic.jpg', // Default if not uploaded
+                coverPicture: user.coverPicture || '/images/Default-pic.jpg', // Default if not uploaded
+                followersCount: user.followers.length,
+                followingCount: user.following.length,
+            });
+        } catch (err) {
+            res.status(400).json({ message: err.message });
+        }
     }
+
 
     static async update(req, res) {
         try {
