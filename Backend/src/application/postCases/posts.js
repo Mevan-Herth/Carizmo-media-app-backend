@@ -16,7 +16,6 @@ const addPost = async (postDb, post) => {
             _id:newId,
             ...post,
         })
-        console.log(newPost)
         await newPost.save()
 
         return newId
@@ -25,10 +24,8 @@ const addPost = async (postDb, post) => {
     }
 }
 
-const deletePost = async(postDb,id)=>{
-    try{await postDb.findByIdAndDelete(id)}
-
-    catch(err) {throw err}
+const deletePost = async(postDb,id,userId)=>{
+    return await postDb.findOneAndDelete({_id:id,userId:userId})
 }
 
 module.exports = {
