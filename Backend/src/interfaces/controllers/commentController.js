@@ -11,9 +11,8 @@ const {
   class CommentController {
     async createComment(req, res) {
       try {
-        const { postId, content } = req.body;
-        const userId = req.user.id; // Assuming auth middleware adds user to req
-  
+        const { postId, content, userId} = req.body;
+
         if (!content || !postId) {
           return res.status(400).json({ error: 'Post ID and content are required' });
         }
@@ -48,8 +47,7 @@ const {
     async updateComment(req, res) {
       try {
         const { commentId } = req.params;
-        const { content } = req.body;
-        const userId = req.user.id; // Assuming auth middleware adds user to req
+        const { content, userId } = req.body;
   
         if (!content) {
           return res.status(400).json({ error: 'Content is required' });
@@ -68,12 +66,9 @@ const {
     async deleteComment(req, res) {
       try {
         const { commentId } = req.params;
-        const userId = req.user.id; // Assuming auth middleware adds user to req
+        const {userId} = req.body;
         
-        // Check if user is a super user (admin)
-        const isSuperUser = req.user.role === 'admin'; // Adjust based on your auth setup
-        
-        const result = await deleteComment(commentId, userId, isSuperUser);
+        const result = await deleteComment(commentId, userId);
         res.status(200).json(result);
       } catch (error) {
         if (error.message.includes('Unauthorized')) {

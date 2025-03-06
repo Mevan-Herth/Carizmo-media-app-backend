@@ -3,14 +3,13 @@ const Comment = require('../../infrastructure/database/models/commentSchema');
 const Post = require('../../infrastructure/database/models/PostSchema');
 const User = require('../../infrastructure/database/models/UserModel');
 
-async function createComment(userId, postId, content, parentCommentId = null) {
+async function createComment(userId, postId, content) {
     try {
         // Create the comment
         const comment = new Comment({
             content,
             postId,
             userId,
-            parentCommentId
         });
 
         await comment.save();

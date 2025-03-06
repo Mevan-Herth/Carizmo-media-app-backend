@@ -6,12 +6,14 @@ const commentRoutes = require('./interfaces/routes/commentRoutes'); // Add this 
 const postRoutes = require('./interfaces/routes/postRoutes'); // If you have post routes
 const { connectDB, env, serverConfig, logger } = require('./config');
 const {} = require('./application/userCases');
-const {authMiddleware} = require('./shared/middlewares/authMiddleware')
+const {authMiddleware} = require('../src/shared/middlewares/authMiddleware');
+const cookieParser = require('cookie-parser');
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser(env.COOKIE_SECRET))
 
 //connect to MongoDb
 connectDB();

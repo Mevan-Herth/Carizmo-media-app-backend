@@ -4,13 +4,12 @@ const Comment = require('../../infrastructure/database/models/commentSchema');
 const Post = require('../../infrastructure/database/models/PostSchema');
 
 // Create a comment
-const createComment = async (userId, postId, content, parentCommentId = null) => {
+const createComment = async (userId, postId, content) => {
   try {
     const comment = new Comment({
       content,
       postId,
-      userId,
-      parentCommentId
+      userId
     });
 
     await comment.save();
@@ -79,25 +78,19 @@ const updateComment = async (commentId, userId, content) => {
 };
 
 // Delete a comment
-const deleteComment = async (commentId, userId, isSuperUser = false) => {
+const deleteComment = async (commentId, userId) => {
   try {
-    const comment = await Comment.findById(commentId);
+    const comment = await Comment.findByIdAndDelete(commentId);
     
     if (!comment) {
       throw new Error('Comment not found');
     }
     
     // Check if user is authorized to delete (either the comment owner or a super user)
-    if (!isSuperUser && comment.userId.toString() !== userId.toString()) {
+    if (comment.userId.toString() !== userId.toString()) {
       throw new Error('Unauthorized: You can only delete your own comments');
     }
-    
-    // Soft delete - mark as deleted but keep in database
-    comment.isDeleted = true;
-    comment.content = "[This comment has been deleted]";
-    comment.updatedAt = Date.now();
-    
-    await comment.save();
+
     return { success: true, message: 'Comment deleted successfully' };
   } catch (error) {
     throw new Error(`Failed to delete comment: ${error.message}`);

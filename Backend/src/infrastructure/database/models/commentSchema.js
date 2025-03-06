@@ -17,15 +17,6 @@ const commentSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    parentCommentId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Comment',
-        default: null
-    },
-    likes: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }],
     createdAt: {
         type: Date,
         default: Date.now
@@ -33,10 +24,6 @@ const commentSchema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now
-    },
-    isDeleted: {
-        type: Boolean,
-        default: false
     }
 });
 
