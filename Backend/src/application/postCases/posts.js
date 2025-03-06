@@ -9,6 +9,10 @@ const getPost = async (postDb,id) => {
   return post
 }
 
+const getUserPost = async (postDb,userId) =>{
+    return await postDb.find({userId:userId})
+}
+
 const addPost = async (postDb, post) => {
     try {
         const newId = await new mongoose.Types.ObjectId()
@@ -29,5 +33,5 @@ const deletePost = async(postDb,id,userId)=>{
 }
 
 module.exports = {
-    getPost, addPost, deletePost
+    getPost, getUserPost, addPost, deletePost
 }

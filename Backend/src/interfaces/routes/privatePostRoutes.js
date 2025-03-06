@@ -2,12 +2,6 @@ const express = require("express");
 const router = express.Router();  
 const Post = require("../controllers/Posts")
 
-router.get("/post/:id", async (req, res) => {
-  const post = await Post.getPostPage(req.params.id);
-  if (!post) return res.status(400).json({message:"Post not found"})
-
-  res.status(200).json(post)
-});
 
 router.post("/add-post", async (req, res) => {
   const {title, content} = req.body
@@ -30,10 +24,11 @@ router.delete("/delete-post/:id", async (req, res) => {
 
 });
 
-router.get("/post-detail/:id", async(req, res) => {
-  const post = await Post.getPostPage(req.params.id);
-  if (!post) return res.status(400).json({message:"Post not found"})
+router.patch("/edit-post/:id", async (req,res)=>{
+
 });
+
+
 // router.addComment("/add-comment/:postId",async(req,res)=>{
 
 // })
