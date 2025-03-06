@@ -3,6 +3,8 @@ const RegisterUser = require('./RegisterUser');
 const UpdateUser = require('./UpdateUser');
 const DeleteUser = require('./DeleteUser');
 const LogoutUser = require('./LogoutUser');
+const FollowUser = require('./FollowUser');
+
 
 
 
@@ -12,4 +14,5 @@ module.exports = {
   UpdateUser,
   DeleteUser,
   LogoutUser,
+  FollowUser,
 };
