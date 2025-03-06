@@ -10,9 +10,9 @@ router.get("/post/:id", async (req, res) => {
 });
 
 router.post("/add-post", async (req, res) => {
-  const {title, content, userId} = req.body
+  const {title, content} = req.body
   try {
-    const result = await Post.addPost(title,content,userId)
+    const result = await Post.addPost(title,content,req.userId)
     return res.status(200).json({message:`Post added ${result}`})
     }
   catch(error) {return res.status(400).json({message:`${error}`})}
@@ -20,9 +20,8 @@ router.post("/add-post", async (req, res) => {
 
 router.delete("/delete-post/:id", async (req, res) => {
   try{
-    const{userId} = req.body
 
-    await Post.deletePost(req.params.id,userId)
+    await Post.deletePost(req.params.id,req.userId)
     res.status(200).json({message:"Post successfully delete"})
   }
   catch(error){
