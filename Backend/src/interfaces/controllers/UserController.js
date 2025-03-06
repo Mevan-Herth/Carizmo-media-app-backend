@@ -1,5 +1,5 @@
 const { token } = require('morgan');
-const { LoginUser, RegisterUser, UpdateUser, DeleteUser, LogoutUser } = require('../../application/userCases');
+const { LoginUser, RegisterUser, UpdateUser, DeleteUser, LogoutUser, FollowUser } = require('../../application/userCases');
 
 class UserController {
     static async register(req, res) {
@@ -101,6 +101,18 @@ class UserController {
             res.status(200).json({ message: "User deleted successfully!", deletedUser: deletedUser });
 
         } catch (err) {
+            res.status(400).json({ message: err.message });
+        }
+    }
+    static async followUser(req, res){
+        try{
+            const {followerId, userIdToFollow} = req.body;
+
+            const followUser = new FollowUser();
+            const result = await followUser.execute(followerId, userIdToFollow);
+
+            res.status(200).json(result);
+        }catch(err){
             res.status(400).json({ message: err.message });
         }
     }
