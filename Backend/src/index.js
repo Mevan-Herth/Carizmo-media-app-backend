@@ -1,13 +1,10 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const userRoutes = require('./interfaces/routes/userRoutes');
-const postRoutes = require('./interfaces/routes/postRoutes');
+const privPostRoutes = require('./interfaces/routes/privatePostRoutes');
+const pubPostRoutes = require('./interfaces/routes/publicPostRoutes');
 const userProfileRoutes = require('./interfaces/routes/userProfileRoutes');
-<<<<<<< HEAD
-const commentRoutes = require('./interfaces/routes/CommentRoutes'); 
-const postRoutes = require('./interfaces/routes/postRoutes');
-=======
->>>>>>> parent of fceb0f2 (Merge remote-tracking branch 'origin/Omar')
+const commentRoutes = require('./interfaces/routes/commentRoutes');
 const { connectDB, env, serverConfig, logger } = require('./config');
 const {} = require('./application/userCases');
 const {authMiddleware} = require('../src/shared/middlewares/authMiddleware');
@@ -23,13 +20,15 @@ app.use(cookieParser(env.COOKIE_SECRET))
 connectDB();
 
 
-// use routes
+// public posts
+app.use('/api/posts', pubPostRoutes);
 app.use('/api/users', userRoutes);
+
 //protected routes
 app.use(authMiddleware);
-app.use('/api/posts', postRoutes);
+app.use('/api/user-posts', privPostRoutes);
 app.use('/api/users', userProfileRoutes);
-app.use('/api/posts',postRoutes)
+app.use('/api/comments',commentRoutes);
 
 
 // Start the server
