@@ -6,6 +6,10 @@ const getPostPage = async(postId) =>{
     return await postCase.getPost(postClient.postModel,postId)
 }
 
+const getUserPosts = async(userId, page) =>{
+
+}
+
 const addPost = async(title,content,userId)=>{
     const postObj = {
         "title":title,
@@ -28,4 +32,8 @@ const deletePost = async(postId,userId)=>{
     if (!result){throw Error("User's post not found")}
 }
 
-module.exports = {getPostPage,addPost,deletePost}
+const updatePost = async (postId)=>{
+    
+}
+
+module.exports = {getPostPage, getUserPosts,addPost,deletePost}

@@ -3,7 +3,8 @@ const dotenv = require('dotenv');
 const userRoutes = require('./interfaces/routes/userRoutes');
 const userProfileRoutes = require('./interfaces/routes/userProfileRoutes');
 const commentRoutes = require('./interfaces/routes/CommentRoutes'); 
-const postRoutes = require('./interfaces/routes/postRoutes');
+const privPostRoutes = require('./interfaces/routes/privatePostRoutes');
+const pubPostRoutes = require('./interfaces/routes/publicPostRoutes');
 const { connectDB, env, serverConfig, logger } = require('./config');
 const {} = require('./application/userCases');
 const {authMiddleware} = require('../src/shared/middlewares/authMiddleware');
@@ -21,11 +22,12 @@ connectDB();
 
 // use routes
 app.use('/api/users', userRoutes);
+app.use('/api/posts',pubPostRoutes);
 
 //protected routes
 app.use(authMiddleware);
 app.use('/api/users', userProfileRoutes);
-app.use('/api/posts',postRoutes)
+app.use('/api/user-posts',privPostRoutes)
 
 
 // Comment routes
