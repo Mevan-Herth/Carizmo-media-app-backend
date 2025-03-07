@@ -1,9 +1,15 @@
 const postCase = require("../../application/postCases/posts")
 const postClient =require("../../domain/PostDbClient")
+const commentCase = require("../../application/postCases/comments")
 const model = require("../../infrastructure/database/models/PostSchema")
 
-const getPostPage = async(postId) =>{
-    return await postCase.getPost(postClient.postModel,postId)
+const getPostPage = async(postId,commentPage) =>{
+    post =  await postCase.getPost(postClient.postModel,postId)
+    if(!post) return null;
+
+    comments = await commentCase.getCommentsByPostId(postId)
+
+    return {"post":post,"comments":comments}
 }
 
 const getUserPosts = async(userId, page) =>{
