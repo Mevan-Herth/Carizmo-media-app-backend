@@ -17,7 +17,7 @@ const {
           return res.status(400).json({ error: 'Post ID and content are required' });
         }
   
-        const comment = await createComment(userId, postId, content);
+        const comment = await createComment(req.userId, postId, content);
         res.status(201).json(comment);
       } catch (error) {
         res.status(500).json({ error: error.message });

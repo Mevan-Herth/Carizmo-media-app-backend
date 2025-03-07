@@ -6,6 +6,9 @@ const commentController = require('../controllers/commentController');
 // Create a new comment
 router.post('/', commentController.createComment);
 
+// Get comment by post
+router.get('/post-comments/:postId', commentController.getCommentsByPost)
+
 // Get a specific comment
 router.get('/:commentId', commentController.getComment);
 

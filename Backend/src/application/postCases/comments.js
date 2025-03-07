@@ -37,8 +37,9 @@ const getCommentById = async (commentId) => {
 };
 
 // Get all comments for a post
-const getCommentsByPostId = async (postId) => {
+const getCommentsByPostId = async (postId,limit) => {
   try {
+    console.log(postId);
     const comments = await Comment.find({ 
       postId: postId,
       isDeleted: false
