@@ -1,5 +1,5 @@
-const UserModel = require('../../infrastructure/database/models/UserModel');
-const { generateToken } = require('../../infrastructure/services/authService');
+const UserModel = require('../../models/UserModel');
+const { generateToken } = require('../../../services/authService');
 
 class LogoutUser {
     async execute() {

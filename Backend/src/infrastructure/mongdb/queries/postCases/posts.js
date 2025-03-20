@@ -1,4 +1,3 @@
-const Post = require("../../infrastructure/database/models/PostSchema");
 const mongoose = require("mongoose")
 
 const getPost = async (postDb,id) => {

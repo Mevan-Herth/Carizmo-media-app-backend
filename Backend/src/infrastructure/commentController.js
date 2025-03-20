@@ -6,7 +6,7 @@ const {
     updateComment,
     deleteComment,
     toggleLikeComment
-  } = require('../../application/postCases/comments');
+  } = require('./mongdb/queries/postCases/comments');
   
   class CommentController {
     async createComment(req, res) {

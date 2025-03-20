@@ -1,7 +1,6 @@
 // src/application/postCases/comments.js
 
-const Comment = require('../../infrastructure/database/models/commentSchema');
-const Post = require('../../infrastructure/database/models/PostSchema');
+const Comment = require('../../models/commentSchema');
 
 // Create a comment
 const createComment = async (userId, postId, content) => {

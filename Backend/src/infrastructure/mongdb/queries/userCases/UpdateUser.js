@@ -1,4 +1,4 @@
-const UserModel = require('../../infrastructure/database/models/UserModel');
+const UserModel = require('../../models/UserModel');
 const bcrypt = require('bcrypt');
 
 class UpdateUser {

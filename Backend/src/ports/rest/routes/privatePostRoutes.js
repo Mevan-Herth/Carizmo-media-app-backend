@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();  
-const Post = require("../controllers/Posts")
+const Post = require("../../../infrastructure/Posts")
 
 
 router.post("/add-post", async (req, res) => {

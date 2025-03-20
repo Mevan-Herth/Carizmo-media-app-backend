@@ -1,4 +1,4 @@
-const UserModel = require('../../infrastructure/database/models/UserModel');
+const UserModel = require('../../models/UserModel');
 
 class DeleteUser {
     async execute({ userId }) {
