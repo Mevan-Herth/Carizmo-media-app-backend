@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();  
 const Post = require("../../../infrastructure/Posts")
-const postDependencies = require("../../../infrastructure/dependencies/postDependencies")
+const postDependencies = require("../../../infrastructure/dependencies/dependencies")
 
 router.get("/post-detail/:id", async(req, res) => {
     try{
