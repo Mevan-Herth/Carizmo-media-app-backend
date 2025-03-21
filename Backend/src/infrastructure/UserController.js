@@ -3,7 +3,7 @@ const { LoginUser, RegisterUser, UpdateUser, DeleteUser, LogoutUser, FollowUser 
 
 class UserController {
     constructor(dependencies) {
-        this.userClient = dependencies.postClient;
+        this.userClient = dependencies.Client;
         this.UserModel = this.userClient.UserModel;
     }
         async register(req, res) {

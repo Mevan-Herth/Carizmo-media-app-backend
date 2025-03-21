@@ -2,7 +2,7 @@ const postQuery = require("./mongdb/queries/postCases/posts")
 const commentQuery = require("./mongdb/queries/postCases/comments")
 
 const getPostPage = (dependencies) => async(postId,commentPage) =>{
-    const postClient = dependencies.postClient
+    const postClient = dependencies.Client
     const postModel = postClient.postModel
     const commentModel = postClient.commentModel
 

@@ -1,6 +1,6 @@
 const {env} = require("../../config/env")
-const postClient=require("../mongdb/mongoDbClient")
+const Client=require("../mongdb/mongoDbClient")
 
-const dependencies = {env,postClient}
+const dependencies = {env,Client}
 
 module.exports =  dependencies
