@@ -1,16 +1,15 @@
-const UserModel = require('../../models/UserModel');
 
 class FollowUser {
-    async execute(followerId, userIdtoFollow){
+    async execute(userDb, followerId, userIdtoFollow){
         try{
             //check if the user to follow exsists 
-            const userToFollow = await UserModel.findById(userIdtoFollow);
+            const userToFollow = await userDb.findById(userIdtoFollow);
             if(!userToFollow){
                 throw new Error('User to follow not found');
             }
 
             //ceck if follwer exsists
-            const follower = await UserModel.findById(followerId);
+            const follower = await userDb.findById(followerId);
             if(!follower){
                 throw new Error('Follower not found');
             }

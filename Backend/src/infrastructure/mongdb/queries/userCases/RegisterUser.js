@@ -1,15 +1,14 @@
-const UserModel = require('../../models/UserModel');
 const { generateToken } = require('../../../services/authService');
 
 class RegisterUser {
-    async execute({ username, email, password }) {
+    async execute({ userDb,username, email, password }) {
         // validate the inputs
         if (!username || !email || !password) {
             throw new Error('All fields are required!!!');
         }
 
         // check if user already exsits 
-        const existingUser = await UserModel.findOne({ email });
+        const existingUser = await userDb.findOne({ email });
         if (existingUser) {
             throw new Error('User alreadt exsits!!!')
         }
@@ -20,7 +19,7 @@ class RegisterUser {
 
         // save the user to the database
         // Create and save the user
-        const user = new UserModel({ username, email, password });
+        const user = new userDb({ username, email, password });
         await user.save();
 
 

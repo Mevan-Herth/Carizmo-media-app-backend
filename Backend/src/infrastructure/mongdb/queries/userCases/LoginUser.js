@@ -1,25 +1,24 @@
-const UserModel = require('../../models/UserModel');
-const { generateToken } = require('../../../services/authService')
 const bcrypt = require('bcrypt');
+const { generateToken } = require('../../../services/authService'); // Assuming you have a generateToken function
 
 class LoginUser {
-    async execute({email, password }) {
-        // check if user already exsits 
-        const user = await UserModel.findOne({
+    async execute({ userDb, email, password }) {
+        // Check if user already exists
+        const user = await userDb.findOne({
             $or: [{ email: email }, { username: email }]
         });
         if (!user) {
-            throw new Error('User not found!!!!')
+            throw new Error('User not found!');
         }
 
-        //password validation
-        const validatePassword = await bcrypt.compare(password, user.password)
+        // Validate the password
+        const validatePassword = await bcrypt.compare(password, user.password);
         if (!validatePassword) {
-            throw new Error('invalid password!!!!')
+            throw new Error('Invalid password!');
         }
 
-        //genrate token
-        const token = generateToken(user._id);
+        // Generate token
+        const token = generateToken(user._id); 
         return {
             user: {
                 id: user._id,
@@ -30,4 +29,5 @@ class LoginUser {
         };
     }
 }
+
 module.exports = LoginUser;

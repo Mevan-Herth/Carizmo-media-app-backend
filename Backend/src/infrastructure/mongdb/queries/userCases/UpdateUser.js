@@ -1,14 +1,13 @@
-const UserModel = require('../../models/UserModel');
 const bcrypt = require('bcrypt');
 
 class UpdateUser {
-    async execute({ userId, updateData }) {
+    async execute({userDb, userId, updateData }) {
          // If updating password, hash it first
          if (updateData.password) {
             updateData.password = await bcrypt.hash(updateData.password, 10);
         }
         //update data
-        const user = await UserModel.findByIdAndUpdate(userId,updateData,{
+        const user = await userDb.findByIdAndUpdate(userId,updateData,{
             runValidators: true
         });
         if (!user) {
