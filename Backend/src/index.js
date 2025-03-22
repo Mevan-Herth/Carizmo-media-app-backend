@@ -5,6 +5,7 @@ const privPostRoutes = require('./ports/rest/routes/privatePostRoutes');
 const pubPostRoutes = require('./ports/rest/routes/publicPostRoutes');
 const userProfileRoutes = require('./ports/rest/routes/userProfileRoutes');
 const commentRoutes = require('./ports/rest/routes/commentRoutes');
+const searchRoute = require('./ports/rest/routes/searchRoute');
 const {env, serverConfig, logger } = require('./config');
 const connectDB = require("./infrastructure/mongdb/connection")
 const {authMiddleware} = require('../src/shared/middlewares/authMiddleware');
@@ -29,6 +30,7 @@ app.use(authMiddleware);
 app.use('/api/user-posts', privPostRoutes);
 app.use('/api/users', userProfileRoutes);
 app.use('/api/comments',commentRoutes);
+app.use('/api/search-service',searchRoute);
 
 
 // Start the server

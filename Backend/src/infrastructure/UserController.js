@@ -6,13 +6,13 @@ class UserController {
         this.userClient = dependencies.dbClient;
         this.UserModel = this.userClient.UserModel;
     }
-        async register(req, res) {
+    async register(req, res) {
         try {
             const { username, email, password } = req.body;
 
             // call the use case
             const registerUser = new RegisterUser();
-            const { user, token } = await registerUser.execute({userDb: this.UserModel, username, email, password });
+            const { user, token } = await registerUser.execute({ userDb: this.UserModel, username, email, password });
             res.cookie('jwt', token, {
                 httpOnly: true,  // Makes it inaccessible to JavaScript (important for security)
                 signed: true,    // Signs the cookie to prevent tampering
@@ -30,11 +30,11 @@ class UserController {
     async login(req, res) {
         try {
             const { email, password } = req.body;
-    
+
             // Call the LoginUser class to handle the login logic
             const loginUser = new LoginUser();
             const { user, token } = await loginUser.execute({ userDb: this.UserModel, email, password });
-    
+
             // Set the JWT token as a cookie
             res.cookie('jwt', token, {
                 httpOnly: true,
@@ -42,7 +42,7 @@ class UserController {
                 sameSite: 'None',
                 maxAge: 7 * 24 * 60 * 60 * 1000,  // 7 days
             });
-    
+
             // Respond with the user data and token
             res.status(200).json({ message: 'Login successful', data: { user, token } });
         } catch (error) {
@@ -58,7 +58,7 @@ class UserController {
                 sameSite: 'None',
                 // secure: true,
             })
-            const result = logoutUser.execute({userDb: this.UserModel});
+            const result = logoutUser.execute({ userDb: this.UserModel });
             res.status(200).json({ message: 'Logged out successfully' });
         } catch (err) {
             res.status(400).json({ message: err.message });
@@ -84,7 +84,7 @@ class UserController {
             }
             // Call the use case to update the user
             const updateUser = new UpdateUser();
-            const updatedUser = await updateUser.execute({userDb: this.UserModel, userId: id, updateData: updateData });
+            const updatedUser = await updateUser.execute({ userDb: this.UserModel, userId: id, updateData: updateData });
 
             res.status(200).json({ message: "User updated successfully!", data: updatedUser });
 
@@ -102,7 +102,7 @@ class UserController {
             }
 
             const deleteUser = new DeleteUser();
-            const deletedUser = await deleteUser.execute({userDb: this.UserModel, userId: id, })
+            const deletedUser = await deleteUser.execute({ userDb: this.UserModel, userId: id, })
 
             res.status(200).json({ message: "User deleted successfully!", deletedUser: deletedUser });
 
@@ -110,15 +110,15 @@ class UserController {
             res.status(400).json({ message: err.message });
         }
     }
-    async followUser(req, res){
-        try{
-            const {followerId, userIdToFollow} = req.body;
+    async followUser(req, res) {
+        try {
+            const { followerId, userIdToFollow } = req.body;
 
             const followUser = new FollowUser();
-            const result = await followUser.execute (this.UserModel, followerId, userIdToFollow);
+            const result = await followUser.execute(this.UserModel, followerId, userIdToFollow);
 
             res.status(200).json(result);
-        }catch(err){
+        } catch (err) {
             res.status(400).json({ message: err.message });
         }
     }

@@ -1,5 +1,3 @@
-// src/application/postCases/comments.js
-
 const Comment = require('../../models/commentSchema');
 
 // Create a comment

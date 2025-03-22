@@ -1,6 +1,3 @@
-
-const { generateToken } = require('../../../services/authService');
-
 class LogoutUser {
     async execute({userDb}) {
         try{
