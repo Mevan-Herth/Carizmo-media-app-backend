@@ -1,11 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const userRoutes = require('./ports/rest/routes/userRoutes');
-const privPostRoutes = require('./ports/rest/routes/privatePostRoutes');
-const pubPostRoutes = require('./ports/rest/routes/publicPostRoutes');
-const userProfileRoutes = require('./ports/rest/routes/userProfileRoutes');
-const commentRoutes = require('./ports/rest/routes/commentRoutes');
-const searchRoute = require('./ports/rest/routes/searchRoute');
+const { userRoutes,privPostRoutes,pubPostRoutes,userProfileRoutes,commentRoutes, searchRoute,} = require('./ports/rest/routes');
 const {env, serverConfig, logger } = require('./config');
 const connectDB = require("./infrastructure/mongdb/connection")
 const {authMiddleware} = require('../src/shared/middlewares/authMiddleware');
