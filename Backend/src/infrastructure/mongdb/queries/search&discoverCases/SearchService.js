@@ -8,7 +8,7 @@ class SearchService {
 
             //Search for users 
             const users = await dbclient.find({
-                $text: { $search: query }
+                username: { $regex: query, $options: "i" } 
             }).select("username").limit(10);
 
             return {
