@@ -1,10 +1,12 @@
-const { token } = require('morgan');
+const fs = require('fs');
+const path = require('path');
 const { LoginUser, RegisterUser, UpdateUser, DeleteUser, LogoutUser, FollowUser } = require('../infrastructure/mongdb/queries/userCases');
 
 class UserController {
     constructor(dependencies) {
-        this.userClient = dependencies.dbClient;
-        this.UserModel = this.userClient.UserModel;
+        this.dependencies = dependencies;
+        this.UserModel = dependencies.dbClient.UserModel;
+        this.cloudinary = dependencies.cloudinary;
     }
     async register(req, res) {
         try {
@@ -73,24 +75,84 @@ class UserController {
             userId: req.userId, // User ID from the token
         });
     }
-
     async update(req, res) {
         try {
             const { id } = req.params;
             const updateData = req.body;
 
+            // Authorization check
             if (req.userId !== id && !req.body.isAdmin) {
-                return res.status(403).json({ message: "You can only update your own account." });
+                return res.status(403).json({ message: "Unauthorized" });
             }
-            // Call the use case to update the user
-            const updateUser = new UpdateUser();
-            const updatedUser = await updateUser.execute({ userDb: this.UserModel, userId: id, updateData: updateData });
 
-            res.status(200).json({ message: "User updated successfully!", data: updatedUser });
+            if (req.files.profilePicture) {
+                // Verify file exists
+                if (!fs.existsSync(req.files.profilePicture[0].path)) {
+                    throw new Error('Profile picture file not found');
+                }
+    
+                console.log('Attempting Cloudinary upload for profile picture'); 
+    
+                // Upload profile picture to Cloudinary
+                const resultProfile = await this.cloudinary.uploader.upload(req.files.profilePicture[0].path, {
+                    folder: "user_profiles",
+                    resource_type: "auto",
+                    timeout: 60000
+                });
+    
+                console.log('Cloudinary upload successful for profile picture:', resultProfile.secure_url);
+    
+                // Store the result in updateData
+                updateData.profilePicture = resultProfile.secure_url;
+    
+                // Clean up temp profile picture file
+                if (req.files.profilePicture[0].path && fs.existsSync(req.files.profilePicture[0].path)) {
+                    fs.unlinkSync(req.files.profilePicture[0].path);
+                }
+            }
+    
+            // Handle cover picture upload
+            if (req.files.coverPicture) {
+                // Verify file exists
+                if (!fs.existsSync(req.files.coverPicture[0].path)) {
+                    throw new Error('Cover picture file not found');
+                }
+    
+                console.log('Attempting Cloudinary upload for cover picture'); 
+    
+                // Upload cover picture to Cloudinary
+                const resultCover = await this.cloudinary.uploader.upload(req.files.coverPicture[0].path, {
+                    folder: "user_profiles",
+                    resource_type: "auto",
+                    timeout: 60000
+                });
+    
+                console.log('Cloudinary upload successful for cover picture:', resultCover.secure_url);
+    
+                // Store the result in updateData
+                updateData.coverPicture = resultCover.secure_url;
+    
+                // Clean up temp cover picture file
+                if (req.files.coverPicture[0].path && fs.existsSync(req.files.coverPicture[0].path)) {
+                    fs.unlinkSync(req.files.coverPicture[0].path);
+                }
+            }
 
-        }
-        catch (err) {
-            res.status(400).json({ message: err.message });
+            // Update user in database
+            const updatedUser = await this.UserModel.findByIdAndUpdate(
+                id,
+                updateData,
+                { new: true, runValidators: true }
+            );
+
+            if (!updatedUser) {
+                return res.status(404).json({ message: "User not found" });
+            }
+
+            return res.status(200).json({message: "User updated successfully", data: updatedUser });
+
+        } catch (error) {
+            return res.status(500).json({message: "Internal server update error",error: error.message}); 
         }
     }
     async deleteUser(req, res) {
