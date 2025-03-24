@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { LoginUser, RegisterUser, UpdateUser, DeleteUser, LogoutUser, FollowUser } = require('../infrastructure/mongdb/queries/userCases');
+const { LoginUser, RegisterUser, UpdateUser, DeleteUser, LogoutUser, FollowUser, UserProfile } = require('../infrastructure/mongdb/queries/userCases');
 
 class UserController {
     constructor(dependencies) {
@@ -69,11 +69,37 @@ class UserController {
 
 
     async profile(req, res) {
-        res.json({
-            success: true,
-            message: 'You have access to this protected route.',
-            userId: req.userId, // User ID from the token
-        });
+        try {
+            const userId = req.userId;
+            if (!userId) {
+                return res.status(401).json({
+                    success: false,
+                    message: "User not authenticated",
+                });
+            }
+
+            // Assuming you're retrieving the user from the database using the userId
+            const user = await this.UserModel.findById(userId);
+            if (!user) {
+                return res.status(404).json({
+                    success: false,
+                    message: "User not found",
+                });
+            }
+
+            res.status(200).json({
+                success: true,
+                message: 'Profile fetched successfully.',
+                user: user,  // Returning the user's data
+            });
+
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
     }
     async update(req, res) {
         try {
