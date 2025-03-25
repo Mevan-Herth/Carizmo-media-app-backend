@@ -1,9 +1,9 @@
 const Comment = require('../../models/commentSchema');
 
 // Create a comment
-const createComment = async (userId, postId, content) => {
+const createComment = async (model,userId, postId, content) => {
   try {
-    const comment = new Comment({
+    const comment = new model({
       content,
       postId,
       userId
@@ -17,9 +17,9 @@ const createComment = async (userId, postId, content) => {
 };
 
 // Get a comment by ID
-const getCommentById = async (commentId) => {
+const getCommentById = async (model,commentId) => {
   try {
-    const comment = await Comment.findById(commentId)
+    const comment = await model.findById(commentId)
       .populate('userId', 'username profilePicture')
       .exec();
       
@@ -34,10 +34,10 @@ const getCommentById = async (commentId) => {
 };
 
 // Get all comments for a post
-const getCommentsByPostId = async (postId,limit) => {
+const getCommentsByPostId = async (model,postId,limit) => {
   try {
     console.log(postId);
-    const comments = await Comment.find({ 
+    const comments = await model.find({ 
       postId: postId,
       isDeleted: false
     })
@@ -52,9 +52,9 @@ const getCommentsByPostId = async (postId,limit) => {
 };
 
 // Update a comment
-const updateComment = async (commentId, userId, content) => {
+const updateComment = async (model,commentId, userId, content) => {
   try {
-    const comment = await Comment.findById(commentId);
+    const comment = await model.findById(commentId);
     
     if (!comment) {
       throw new Error('Comment not found');
@@ -76,9 +76,9 @@ const updateComment = async (commentId, userId, content) => {
 };
 
 // Delete a comment
-const deleteComment = async (commentId, userId) => {
+const deleteComment = async (model,commentId, userId) => {
   try {
-    const comment = await Comment.findByIdAndDelete(commentId);
+    const comment = await model.findByIdAndDelete(commentId);
     
     if (!comment) {
       throw new Error('Comment not found');
@@ -96,9 +96,9 @@ const deleteComment = async (commentId, userId) => {
 };
 
 // Like/unlike a comment
-const toggleLikeComment = async (commentId, userId) => {
+const toggleLikeComment = async (model,commentId, userId) => {
   try {
-    const comment = await Comment.findById(commentId);
+    const comment = await model.findById(commentId);
     
     if (!comment) {
       throw new Error('Comment not found');

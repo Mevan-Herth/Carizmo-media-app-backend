@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();  
 const Post = require("../../../infrastructure/Posts")
+const postDependencies = require("../../../infrastructure/dependencies/dependencies")
 
 
 router.post("/add-post", async (req, res) => {
   const {title, content} = req.body
   try {
-    const result = await Post.addPost(title,content,req.userId)
+    const result = await Post.addPost(postDependencies)(title,content,req.userId)
     return res.status(200).json({message:`Post added ${result}`})
     }
   catch(error) {return res.status(400).json({message:`${error}`})}
@@ -15,7 +16,7 @@ router.post("/add-post", async (req, res) => {
 router.delete("/delete-post/:id", async (req, res) => {
   try{
 
-    await Post.deletePost(req.params.id,req.userId)
+    await Post.deletePost(postDependencies)(req.params.id,req.userId)
     res.status(200).json({message:"Post successfully delete"})
   }
   catch(error){

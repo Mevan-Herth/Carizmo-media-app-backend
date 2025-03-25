@@ -14,11 +14,14 @@ const getPostPage = (dependencies) => async(postId,commentPage) =>{
     return {"post":post,"comments":comments}
 }
 
-const getUserPosts = async(userId, page) =>{
-
+const getUserPosts = (dependencies) => async(userId, page) =>{
+    
 }
 
-const addPost = async(title,content,userId)=>{
+const addPost = (dependencies) => async(title,content,userId)=>{
+    const postClient = dependencies.dbClient
+    const postModel = postClient.postModel
+
     const postObj = {
         "title":title,
         "mainText":content,
@@ -27,15 +30,18 @@ const addPost = async(title,content,userId)=>{
     }
 
     try {
-        const result = await postQuery.addPost(postClient.postModel,postObj)
+        const result = await postQuery.addPost(postModel,postObj,userId)
         return result
     } catch (error) {
         throw new Error(error)
     }
 }
 
-const deletePost = async(postId,userId)=>{
-    result = await postQuery.deletePost(postClient.postModel,postId,userId)
+const deletePost =(dependencies)=> async(postId,userId)=>{
+    const postClient = dependencies.dbClient
+    const postModel = postClient.postModel
+
+    result = await postQuery.deletePost(postModel,postId,userId)
 
     if (!result){throw Error("User's post not found")}
 }
