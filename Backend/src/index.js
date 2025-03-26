@@ -1,15 +1,20 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const { userRoutes,privPostRoutes,pubPostRoutes,userProfileRoutes,commentRoutes, searchRoute,} = require('./ports/rest/routes');
 const {env, serverConfig, logger } = require('./config');
 const connectDB = require("./infrastructure/mongdb/connection")
 const {authMiddleware} = require('../src/shared/middlewares/authMiddleware');
 const cookieParser = require('cookie-parser');
 
+
+
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+
+app.use(cors(serverConfig.corsOptions));
 app.use(cookieParser(env.COOKIE_SECRET))
 
 //connect to MongoDb
