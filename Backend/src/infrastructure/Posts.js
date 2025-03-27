@@ -41,7 +41,7 @@ const postQuery = require("./mongdb/queries/postCases/posts")
     }
 
      //image
-     if (files.postImages) {
+     if (files&&'postImages' in files) {
          // Verify file exists
          if (!fs.existsSync(files.postImages[0].path)) {
              throw new Error('Profile picture file not found');
