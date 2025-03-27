@@ -1,13 +1,14 @@
 const express = require("express");
-const router = express.Router();  
+const router = express.Router(); 
 const Post = require("../../../infrastructure/Posts")
-const postDependencies = require("../../../infrastructure/dependencies/dependencies")
+ const postDependencies = require("../../../infrastructure/dependencies/dependencies")
+ const uploadImage = require("../../../shared/middlewares/postImageMiddleware")
 
 
-router.post("/add-post", async (req, res) => {
+router.post("/add-post",uploadImage, async (req, res) => {
   const {title, content} = req.body
   try {
-    const result = await Post.addPost(postDependencies)(title,content,req.userId)
+    const result = await Post.addPost(postDependencies)(title,content,req.userId,req.files)
     return res.status(200).json({message:`Post added ${result}`})
     }
   catch(error) {return res.status(400).json({message:`${error}`})}
