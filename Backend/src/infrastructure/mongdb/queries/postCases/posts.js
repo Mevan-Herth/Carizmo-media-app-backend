@@ -31,6 +31,7 @@ const deletePost = async(postDb,id,userId)=>{
     return await postDb.findOneAndDelete({_id:id,userId:userId})
 }
 
+
 module.exports = {
     getPost, getUserPost, addPost, deletePost
 }
