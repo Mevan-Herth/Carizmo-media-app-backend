@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const { userRoutes,privPostRoutes,pubPostRoutes,userProfileRoutes,commentRoutes, searchRoute,} = require('./ports/rest/routes');
+const { userRoutes,privPostRoutes,pubPostRoutes,userProfileRoutes,commentRoutes, searchRoute,chatbotRoutes} = require('./ports/rest/routes');
 const {env, serverConfig, logger } = require('./config');
 const connectDB = require("./infrastructure/mongdb/connection")
 const {authMiddleware} = require('../src/shared/middlewares/authMiddleware');
@@ -24,6 +24,7 @@ connectDB();
 // public posts
 app.use('/api/posts', pubPostRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/chatbot',chatbotRoutes);
 
 //protected routes
 app.use(authMiddleware);

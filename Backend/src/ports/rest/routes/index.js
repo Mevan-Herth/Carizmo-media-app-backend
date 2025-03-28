@@ -4,6 +4,7 @@ const pubPostRoutes = require('./publicPostRoutes');
 const userProfileRoutes = require('./userProfileRoutes');
 const commentRoutes = require('./commentRoutes');
 const searchRoute = require('./searchRoute');
+const chatbotRoutes = require('./chatbotRoutes');
 
 
 module.exports = {
@@ -13,4 +14,5 @@ module.exports = {
     userProfileRoutes,
     commentRoutes,
     searchRoute,
+    chatbotRoutes
   };

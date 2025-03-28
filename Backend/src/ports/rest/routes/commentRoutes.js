@@ -15,7 +15,6 @@ router.get('/post-comments/:postId', commentController.getCommentsByPost.bind(co
 // Get a specific comment
 router.get('/:commentId', commentController.getComment.bind(commentController));
 
-
 // Update a comment
 router.put('/:commentId', commentController.updateComment.bind(commentController));
 
