@@ -41,12 +41,14 @@ class UserController {
             res.cookie('jwt', token, {
                 httpOnly: true,
                 signed: true,
-                sameSite: 'None',
+                secure: true,
+                sameSite: 'none',
                 maxAge: 7 * 24 * 60 * 60 * 1000,  // 7 days
             });
 
             // Respond with the user data and token
             res.status(200).json({ message: 'Login successful', data: { user, token } });
+            console.log(token)
         } catch (error) {
             res.status(400).json({ message: error.message }); // Return the error message from LoginUser class
         }
