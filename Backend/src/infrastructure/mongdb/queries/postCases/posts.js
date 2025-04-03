@@ -1,5 +1,11 @@
 const mongoose = require("mongoose")
 
+const getMultPost = async(postDb,page=1)=>{
+    pgCount = 10
+
+    return postDb.find().skip(pgCount*page).limit(pgCount)
+}
+
 const getPost = async (postDb,id) => {
   const post = await postDb.findById(id);
 
@@ -33,5 +39,5 @@ const deletePost = async(postDb,id,userId)=>{
 
 
 module.exports = {
-    getPost, getUserPost, addPost, deletePost
+    getPost, getUserPost, addPost, deletePost, getMultPost
 }

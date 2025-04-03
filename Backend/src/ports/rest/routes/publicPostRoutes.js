@@ -12,4 +12,13 @@ router.get("/post-detail/:id", async(req, res) => {
     }
 });
 
+router.get("/home",async(req,res)=>{
+    try{
+        const posts = await Post.getMultiplePosts(postDependencies)(req.body.page)
+        res.status(200).json(posts)
+    }catch{
+        res.status(400).json({message:error.message})
+    }
+});
+
 module.exports = router;
