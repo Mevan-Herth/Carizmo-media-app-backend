@@ -14,7 +14,7 @@ const router = express.Router();
 router.get('/profile', userController.profile.bind(userController));
 router.put('/:id', upload, userController.update.bind(userController) );
 router.delete('/:id', userController.deleteUser.bind(userController));
-router.post('/logout', userController.LogoutUser.bind(userController));
+
 router.post('/follow', userController.followUser.bind(userController));
 
 

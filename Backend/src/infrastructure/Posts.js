@@ -22,14 +22,23 @@ const getUserPosts = (dependencies) => async(userId, page) =>{
     // posts = await postModel.find
 }
 
-const getMultiplePosts = (dependencies)=>async(page)=>{
-    const postClient = dependencies.dbClient
-    const postModel = postClient.postModel
+const getMultiplePosts = (dependencies) => async (page = 1, limit = 10) => {
+    const postClient = dependencies.dbClient;
+    const postModel = postClient.postModel;
 
-    if(page>0) page -= 1
+    // Adjust page for 0-based indexing
+    const pageIndex = page > 0 ? page - 1 : 0; // Ensures no negative pages
 
-    return await postQuery.getMultPost(postModel,page)
-}
+    try {
+        // Assuming getMultPost is handling pagination based on `pageIndex` and `limit`
+        const posts = await postQuery.getMultPost(postModel, pageIndex, limit);
+
+        return posts;
+    } catch (error) {
+        console.error("Error fetching posts:", error);
+        throw new Error("Failed to retrieve posts");
+    }
+};
 
 const addPost = (dependencies) => async(title,content,userId,files)=>{
     const postClient = dependencies.dbClient
