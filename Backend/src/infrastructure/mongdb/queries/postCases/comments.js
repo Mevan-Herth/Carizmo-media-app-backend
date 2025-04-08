@@ -1,7 +1,7 @@
 const Comment = require('../../models/commentSchema');
 
 // Create a comment
-const createComment = async (model,userId, postId, content) => {
+const createComment = async (model, userId, postId, content) => {
   try {
     const comment = new model({
       content,
@@ -10,7 +10,14 @@ const createComment = async (model,userId, postId, content) => {
     });
 
     await comment.save();
-    return comment;
+
+    // Populate the userId field before returning
+    const populatedComment = await model
+      .findById(comment._id)
+      .populate('userId', 'username profilePicture')
+      .exec();
+
+    return populatedComment;
   } catch (error) {
     throw new Error(`Failed to create comment: ${error.message}`);
   }
@@ -34,7 +41,7 @@ const getCommentById = async (model,commentId) => {
 };
 
 // Get all comments for a post
-const getCommentsByPostId = async (model,postId,limit) => {
+const getCommentsByPostId = async (model, postId, limit) => {
   try {
     console.log(postId);
     const comments = await model.find({ 

@@ -60,9 +60,9 @@ class UserController {
                 httpOnly: true,
                 signed: true,
                 sameSite: 'None',
-                // secure: true,
+                secure: true,
             })
-            const result = logoutUser.execute({ userDb: this.UserModel });
+            const result = await logoutUser.execute({ userDb: this.UserModel });
             res.status(200).json({ message: 'Logged out successfully' });
         } catch (err) {
             res.status(400).json({ message: err.message });
