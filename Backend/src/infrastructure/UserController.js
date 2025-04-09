@@ -48,7 +48,6 @@ class UserController {
 
             // Respond with the user data and token
             res.status(200).json({ message: 'Login successful', data: { user, token } });
-            console.log(token)
         } catch (error) {
             res.status(400).json({ message: error.message }); // Return the error message from LoginUser class
         }
