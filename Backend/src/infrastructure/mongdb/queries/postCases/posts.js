@@ -3,7 +3,7 @@ const mongoose = require("mongoose")
 const getMultPost = async(postDb,page=1)=>{
     pgCount = 10
 
-    return postDb.find().skip(pgCount*page).limit(pgCount)
+    return postDb.find().sort({createdAt:-1}).skip(pgCount*page).limit(pgCount)
 }
 
 const getPost = async (postDb,id) => {

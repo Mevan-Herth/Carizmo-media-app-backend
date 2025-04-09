@@ -14,8 +14,15 @@ router.get("/post-detail/:id", async(req, res) => {
 
 router.get("/home", async (req, res) => {
     try {
-      const { page = 1, limit = 10 } = req.query; // Default to page 1 and limit 10
-      const posts = await Post.getMultiplePosts(postDependencies)(parseInt(page), parseInt(limit));
+      const {page} = req.query; // Default to page 1 and limit 10
+      console.log(page)
+      const posts = await Post.getMultiplePosts(postDependencies)(parseInt(page), 10);
+      // res.cookie('postPage', token, {
+      //   httpOnly: true,
+      //   signed: true,
+      //   secure: true,
+      //   sameSite: 'none',
+      // });
       res.status(200).json(posts);
     } catch (error) {
       console.error("Error in /home route:", error);
