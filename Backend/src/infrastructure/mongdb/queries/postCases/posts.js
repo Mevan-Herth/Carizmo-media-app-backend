@@ -1,9 +1,14 @@
 const mongoose = require("mongoose")
 
-const getMultPost = async(postDb,page=1)=>{
-    pgCount = 10
+const getMultPost = async(postDb,page=1,userId)=>{
+    let pgCount = 10
+    let query = {}
+    let id = new mongoose.mongo.ObjectId(userId)
 
-    return postDb.find().sort({createdAt:-1}).skip(pgCount*page).limit(pgCount)
+    if(userId)query = {userId:id}
+    console.log(query)
+
+    return postDb.find(query).sort({createdAt:-1}).skip(pgCount*page).limit(pgCount)
 }
 
 const getPost = async (postDb,id) => {

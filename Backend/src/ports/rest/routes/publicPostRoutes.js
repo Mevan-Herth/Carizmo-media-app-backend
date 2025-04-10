@@ -16,7 +16,7 @@ router.get("/home", async (req, res) => {
     try {
       const {page} = req.query; // Default to page 1 and limit 10
       console.log(page)
-      const posts = await Post.getMultiplePosts(postDependencies)(parseInt(page), 10);
+      const posts = await Post.getMultiplePosts(postDependencies)(parseInt(page));
       // res.cookie('postPage', token, {
       //   httpOnly: true,
       //   signed: true,

@@ -1,10 +1,12 @@
 const fs = require('fs');
 const path = require('path');
+const postQuery = require('../infrastructure/mongdb/queries/postCases/posts');
 const { LoginUser, RegisterUser, UpdateUser, DeleteUser, LogoutUser, FollowUser, UserProfile } = require('../infrastructure/mongdb/queries/userCases');
 
 class UserController {
     constructor(dependencies) {
         this.dependencies = dependencies;
+        this.PostModel = dependencies.dbClient.postModel;
         this.UserModel = dependencies.dbClient.UserModel;
         this.cloudinary = dependencies.cloudinary;
     }
@@ -72,13 +74,15 @@ class UserController {
     async profile(req, res) {
         try {
             const userId = req.userId;
+            const page = req.query.page
             if (!userId) {
                 return res.status(401).json({
                     success: false,
                     message: "User not authenticated",
                 });
             }
-
+            console.log(page)
+            console.log(userId)
             // Assuming you're retrieving the user from the database using the userId
             const user = await this.UserModel.findById(userId);
             if (!user) {
@@ -88,10 +92,13 @@ class UserController {
                 });
             }
 
+            const userPosts = await postQuery.getMultPost(this.PostModel, page, userId)
+
             res.status(200).json({
                 success: true,
                 message: 'Profile fetched successfully.',
                 user: user,  // Returning the user's data
+                userPosts: userPosts,
             });
 
         } catch (error) {

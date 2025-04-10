@@ -22,7 +22,7 @@ const getUserPosts = (dependencies) => async(userId, page) =>{
     // posts = await postModel.find
 }
 
-const getMultiplePosts = (dependencies) => async (page = 1, limit = 10) => {
+const getMultiplePosts = (dependencies) => async (page = 1, userId=null) => {
     const postClient = dependencies.dbClient;
     const postModel = postClient.postModel;
 
@@ -31,7 +31,7 @@ const getMultiplePosts = (dependencies) => async (page = 1, limit = 10) => {
 
     try {
         // Assuming getMultPost is handling pagination based on `pageIndex` and `limit`
-        const posts = await postQuery.getMultPost(postModel, pageIndex, limit);
+        const posts = await postQuery.getMultPost(postModel, pageIndex, userId);
 
         return posts;
     } catch (error) {
@@ -46,20 +46,20 @@ const addPost = (dependencies) => async(title,content,userId,files)=>{
     
     const images=[]
 
-// updating database
-const updateDb = async()=>{
-    console.log(images)
-    const postObj = {
-        "title":title,
-        "mainText":content,
-        "userId":userId,
-        "likes":0,
-        "images":images
-    }
+    // updating database
+    const updateDb = async()=>{
+        console.log(images)
+        const postObj = {
+            "title":title,
+            "mainText":content,
+            "userId":userId,
+            "likes":0,
+            "images":images
+        }
 
-    const result = await postQuery.addPost(postModel,postObj)
-    return result
-}
+        const result = await postQuery.addPost(postModel,postObj)
+        return result
+    }
 
     //image
     if (files&&'postImages' in files) {
