@@ -9,4 +9,5 @@ const router = express.Router();
 
 router.get('/search', searchController.search.bind(searchController));
 
+
 module.exports =router;

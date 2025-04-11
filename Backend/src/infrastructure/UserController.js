@@ -69,6 +69,45 @@ class UserController {
             res.status(400).json({ message: err.message });
         }
     }
+    async getUserByUsername(req, res) {
+        try {
+            const { username } = req.params;
+    
+            if (!username) {
+                return res.status(400).json({ success: false, message: "Username is required" });
+            }
+    
+            const user = await this.UserModel.findOne({ username }).select("-password -__v");
+            if (!user) {
+                return res.status(404).json({ success: false, message: "User not found" });
+            }
+    
+            // Optionally support pagination with query param ?page=1
+            const page = req.query.page || 1;
+    
+            // Fetch posts made by this user
+            const userPosts = await postQuery.getMultPost(this.PostModel, page, user._id);
+    
+            res.status(200).json({
+                success: true,
+                message: "Public profile fetched",
+                user: {
+                    _id: user._id,
+                    username: user.username,
+                    bio: user.bio,
+                    profilePicture: user.profilePicture,
+                    coverPicture: user.coverPicture,
+                    followers: user.followers,
+                    following: user.following,
+                    email: user.email, // optional: remove if private
+                },
+                posts: userPosts
+            });
+        } catch (error) {
+            console.error("Error fetching public profile:", error);
+            res.status(500).json({ success: false, message: error.message });
+        }
+    }
 
 
     async profile(req, res) {

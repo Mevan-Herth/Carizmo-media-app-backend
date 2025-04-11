@@ -17,5 +17,6 @@ router.delete('/:id', userController.deleteUser.bind(userController));
 
 router.post('/follow', userController.followUser.bind(userController));
 
+router.get('/profilebyusername/:username', userController.getUserByUsername.bind(userController));
 
 module.exports = router;
