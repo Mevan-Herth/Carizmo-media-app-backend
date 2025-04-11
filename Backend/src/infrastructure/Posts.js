@@ -54,6 +54,7 @@ const addPost = (dependencies) => async(title,content,userId,files)=>{
             "mainText":content,
             "userId":userId,
             "likes":0,
+            "votedUsers": [], 
             "images":images
         }
 
@@ -106,9 +107,59 @@ const deletePost =(dependencies)=> async(postId,userId)=>{
 
     if (!result){throw Error("User's post not found")}
 }
+const votePost = (dependencies) => async (postId, userId, voteType) => {
+    const postClient = dependencies.dbClient
+    const postModel = postClient.postModel;
 
+    // Ensure the vote type is valid
+    if (!['up', 'down'].includes(voteType)) {
+        throw new Error("Invalid vote type. Must be 'up' or 'down'.");
+    }
+
+    // Fetch the post from the database
+    const post = await postModel.findById(postId);
+    if (!post) throw new Error("Post not found");
+
+    // Ensure the votes array exists
+    if (!post.votes) {
+        post.votes = [];  // Initialize an empty array if votes doesn't exist
+    }
+
+    // Check if the user has already voted
+    const existingVote = post.votes.find(v => v.userId.toString() === userId.toString());
+    let voteChange = 0;
+
+    if (existingVote) {
+        // If the user has already voted
+        if (existingVote.vote === 1 && voteType === 'up') {
+            throw new Error("Already upvoted");
+        } else if (existingVote.vote === -1 && voteType === 'down') {
+            throw new Error("Already downvoted");
+        } else if (existingVote.vote !== (voteType === 'up' ? 1 : -1)) {
+            // Switch the vote type
+            voteChange = voteType === 'up' ? 2 : -2;
+
+            await postModel.updateOne(
+                { _id: postId, "votes.userId": userId },
+                { $set: { "votes.$.vote": voteType === 'up' ? 1 : -1 }, $inc: { likes: voteChange } }
+            );
+        }
+    } else {
+        // If the user hasn't voted yet, add the vote
+        voteChange = voteType === 'up' ? 1 : -1;
+        await postModel.updateOne(
+            { _id: postId },
+            {
+                $push: { votes: { userId, vote: voteType === 'up' ? 1 : -1 } },
+                $inc: { likes: voteChange }
+            }
+        );
+    }
+
+    return { message: "Vote processed successfully", voteChange };
+};
 const updatePost = async (postId)=>{
     
 }
 
-module.exports = {getPostPage, getUserPosts,addPost,deletePost,getMultiplePosts}
+module.exports = {getPostPage, getUserPosts,addPost,deletePost,getMultiplePosts, votePost}

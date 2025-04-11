@@ -41,6 +41,21 @@ router.get("/all",async(req,res)=>{
     res.status(400).json({ message: error.message });
   }
 });
+
+
+router.post('/vote', async (req, res) => {
+  const { postId, voteType } = req.body;
+  const userId = req.userId; 
+
+  try {
+    const result = await Post.votePost(postDependencies)(postId, userId, voteType);
+    res.status(200).json(result);
+  } catch (err) {
+    console.error("Vote error:", err.message);
+    res.status(400).json({ error: err.message });
+  }
+});
+
 // router.addComment("/add-comment/:postId",async(req,res)=>{
 
 // })

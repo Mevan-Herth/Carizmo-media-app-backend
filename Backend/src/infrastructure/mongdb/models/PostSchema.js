@@ -21,8 +21,15 @@ const PostSchema = new mongoose.Schema({
     },
     likes:{
         type: Number,
-        required:true
+        required:true,
+        default: 0
     },
+    votedUsers: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ]
     
 },
 { timestamps: true })
