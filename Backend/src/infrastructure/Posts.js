@@ -100,64 +100,61 @@ const addPost = (dependencies) => async(title,content,userId,files)=>{
 }
 
 const deletePost =(dependencies)=> async(postId,userId)=>{
-    const postClient = dependencies.dbClient
-    const postModel = postClient.postModel
+    const postModel = dependencies.dbClient.postModel;
 
     result = await postQuery.deletePost(postModel,postId,userId)
 
     if (!result){throw Error("User's post not found")}
 }
-const votePost = (dependencies) => async (postId, userId, voteType) => {
-    const postClient = dependencies.dbClient
-    const postModel = postClient.postModel;
 
-    // Ensure the vote type is valid
+
+const votePost = (dependencies) => async (postId, userId, voteType) => {
+    const postModel = dependencies.dbClient.postModel;
+
     if (!['up', 'down'].includes(voteType)) {
         throw new Error("Invalid vote type. Must be 'up' or 'down'.");
     }
 
-    // Fetch the post from the database
     const post = await postModel.findById(postId);
     if (!post) throw new Error("Post not found");
 
-    // Ensure the votes array exists
-    if (!post.votes) {
-        post.votes = [];  // Initialize an empty array if votes doesn't exist
-    }
+    // Use votedUsers instead of votes
+    const votedUsers = post.votedUsers || [];
+    const existingVote = votedUsers.find(v => v.userId && v.userId.toString() === userId.toString());
 
-    // Check if the user has already voted
-    const existingVote = post.votes.find(v => v.userId.toString() === userId.toString());
+    const newVoteValue = voteType === 'up' ? 1 : -1;
     let voteChange = 0;
 
     if (existingVote) {
-        // If the user has already voted
-        if (existingVote.vote === 1 && voteType === 'up') {
-            throw new Error("Already upvoted");
-        } else if (existingVote.vote === -1 && voteType === 'down') {
-            throw new Error("Already downvoted");
-        } else if (existingVote.vote !== (voteType === 'up' ? 1 : -1)) {
-            // Switch the vote type
-            voteChange = voteType === 'up' ? 2 : -2;
-
+        if (existingVote.vote === newVoteValue) {
+            throw new Error(`Already ${voteType}voted`);
+        } else {
+            voteChange = newVoteValue * 2;
             await postModel.updateOne(
-                { _id: postId, "votes.userId": userId },
-                { $set: { "votes.$.vote": voteType === 'up' ? 1 : -1 }, $inc: { likes: voteChange } }
+                { _id: postId, "votedUsers.userId": userId },
+                {
+                    $set: { "votedUsers.$.vote": newVoteValue },
+                    $inc: { likes: voteChange }
+                }
             );
         }
     } else {
-        // If the user hasn't voted yet, add the vote
-        voteChange = voteType === 'up' ? 1 : -1;
+        voteChange = newVoteValue;
         await postModel.updateOne(
             { _id: postId },
             {
-                $push: { votes: { userId, vote: voteType === 'up' ? 1 : -1 } },
+                $push: { votedUsers: { userId, vote: newVoteValue } },
                 $inc: { likes: voteChange }
             }
         );
     }
 
-    return { message: "Vote processed successfully", voteChange };
+    return {
+        message: "Vote processed successfully",
+        voteChange
+    };
 };
+
 const updatePost = async (postId)=>{
     
 }

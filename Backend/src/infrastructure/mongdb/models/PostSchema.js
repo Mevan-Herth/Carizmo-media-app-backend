@@ -7,7 +7,7 @@ const PostSchema = new mongoose.Schema({
         minlength: 1,
         maxlength: 200,
     },
-    mainText:{
+    mainText: {
         type: String,
         required: true
     },
@@ -15,24 +15,32 @@ const PostSchema = new mongoose.Schema({
         type: Array,
         default: []
     },
-    userId:{
-        type: mongoose.Schema.Types.ObjectId, ref: 'User' ,
-        required:true,
+    userId: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'User',
+        required: true,
     },
-    likes:{
+    likes: {
         type: Number,
-        required:true,
+        required: true,
         default: 0
     },
     votedUsers: [
         {
+          userId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
+            ref: 'User',
+            required: true
+          },
+          vote: {
+            type: Number,
+            enum: [1, -1],
+            required: true
+          }
         }
-    ]
-    
+      ]
+
 },
-{ timestamps: true })
+    { timestamps: true })
 
 
 module.exports = mongoose.model('Post', PostSchema);
