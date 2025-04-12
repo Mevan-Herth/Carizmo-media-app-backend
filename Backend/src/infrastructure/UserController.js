@@ -78,15 +78,13 @@ class UserController {
             }
     
             const user = await this.UserModel.findOne({ username }).select("-password -__v");
+            let userPosts
             if (!user) {
+                // Fetch posts made by this user
+                userPosts = await postQuery.getMultPost(this.PostModel, req.query.page, user._id);
                 return res.status(404).json({ success: false, message: "User not found" });
             }
     
-            // Optionally support pagination with query param ?page=1
-            const page = req.query.page || 1;
-    
-            // Fetch posts made by this user
-            const userPosts = await postQuery.getMultPost(this.PostModel, page, user._id);
     
             res.status(200).json({
                 success: true,
@@ -120,8 +118,6 @@ class UserController {
                     message: "User not authenticated",
                 });
             }
-            console.log(page)
-            console.log(userId)
             // Assuming you're retrieving the user from the database using the userId
             const user = await this.UserModel.findById(userId);
             if (!user) {
@@ -131,13 +127,13 @@ class UserController {
                 });
             }
 
-            const userPosts = await postQuery.getMultPost(this.PostModel, page, userId)
+            // const userPosts = await postQuery.getMultPost(this.PostModel, page, userId)
 
             res.status(200).json({
                 success: true,
                 message: 'Profile fetched successfully.',
                 user: user,  // Returning the user's data
-                userPosts: userPosts,
+                // userPosts: userPosts,
             });
 
         } catch (error) {

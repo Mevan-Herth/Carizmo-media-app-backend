@@ -43,7 +43,6 @@ const getCommentById = async (model,commentId) => {
 // Get all comments for a post
 const getCommentsByPostId = async (model, postId, limit) => {
   try {
-    console.log(postId);
     const comments = await model.find({ 
       postId: postId,
       isDeleted: false

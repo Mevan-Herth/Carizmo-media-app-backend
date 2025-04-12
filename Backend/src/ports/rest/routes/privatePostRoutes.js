@@ -32,9 +32,9 @@ router.patch("/edit-post/:id", async (req,res)=>{
 
 router.get("/all",async(req,res)=>{
   try {
-    const {page} = req.query; // Default to page 1 and limit 10
-    console.log(page)
-    const posts = await Post.getMultiplePosts(postDependencies)(parseInt(page),req.userId);
+    const {page,userId} = req.query; // Default to page 1 and limit 10
+    console.log(req.query)
+    const posts = await Post.getMultiplePosts(postDependencies)(parseInt(page),userId);
     res.status(200).json(posts);
   } catch (error) {
     console.error("Error in /home route:", error);

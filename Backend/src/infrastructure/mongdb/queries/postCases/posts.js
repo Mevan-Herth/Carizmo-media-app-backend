@@ -6,8 +6,7 @@ const getMultPost = async(postDb,page=1,userId)=>{
     let id = new mongoose.mongo.ObjectId(userId)
 
     if(userId)query = {userId:id}
-    console.log(query)
-
+    
     return postDb.find(query).sort({createdAt:-1}).skip(pgCount*page).limit(pgCount)
 }
 
