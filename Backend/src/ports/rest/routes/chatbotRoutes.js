@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Chatbot = require('../../../infrastructure/Chatbot')
 
-router.get("/",async(req,res)=>{
+router.post("",async(req,res)=>{
     try{
         const {prompt} = req.body
+        console.log(req.body)
         const response = await Chatbot.sendPrompt(prompt)
         res.status(200).json(response)
     }
